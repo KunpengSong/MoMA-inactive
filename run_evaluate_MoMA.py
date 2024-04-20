@@ -1,10 +1,13 @@
-import torch
 import os
+import torch
 from pytorch_lightning import seed_everything
 from torchvision.utils import save_image
+import warnings 
 
 from model_lib.modules import MoMA_main_modal
 from model_lib.utils import parse_args
+warnings.filterwarnings('ignore') 
+
 
 seed_everything(0)
 args = parse_args()
@@ -22,6 +25,8 @@ mask_path = "example_images/myImages/3_mask.jpg"
 subject = 'car'
 
 
+
+# Let's generate new images!
 
 ################ change context ##################
 prompt = "A car in autumn with falling leaves."
