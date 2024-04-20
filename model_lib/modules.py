@@ -1,9 +1,15 @@
+import os
+from PIL import Image
 import torch
 import torch.nn as nn
 from typing import List, Optional
 import torch.utils.checkpoint
+from torchvision.transforms import ToPILImage
 from model_lib.moMA_generator import MoMA_generator
 from transformers.activations import ACT2FN
+from huggingface_hub import hf_hub_download
+
+from dataset_lib.dataset_eval_MoMA import Dataset_evaluate_MoMA
 
 from llava.model.builder import load_pretrained_model
 from llava.mm_utils import tokenizer_image_token, get_model_name_from_path
@@ -75,6 +81,7 @@ class MoMA_main_modal(nn.Module):
         self.unet = self.moMA_generator.pipe.unet
         self.vae = self.moMA_generator.pipe.vae
         
+        print('Loading MoMA: its Multi-modal LLM...')
         model_name = get_model_name_from_path(args.model_path)
         self.tokenizer_llava, self.model_llava, self.image_processor_llava, self.context_len_llava = load_pretrained_model(args.model_path, None, model_name, device=args.device)
         
@@ -85,15 +92,18 @@ class MoMA_main_modal(nn.Module):
         self.freeze_modules()
 
     def load_saved_components(self):
+        if not os.path.exists(self.args.load_attn_adapters):
+            print('Loading Attentions and LLM mappings...')
+            hf_hub_download(repo_id=self.args.model_path, filename="attn_adapters_projectors.th",local_dir='/'.join(self.args.load_attn_adapters.split('/')[:-1]))
+
         #load attention adapters and self cross attentions
         state_dict = torch.load(self.args.load_attn_adapters, map_location="cpu")
         self.moMA_generator.image_proj_model.load_state_dict(state_dict["projectors"])
         attn_layers = torch.nn.ModuleList(self.unet.attn_processors.values())
         attn_layers.load_state_dict(state_dict["self_cross_attentions"],strict=False)
 
-        #load fine tuned Multi-modal LLM checkpoint
-        load_params = torch.load(self.args.load_MLLM, map_location="cpu")
-        self.load_state_dict(load_params,strict=False)
+        #load LLM projectors
+        self.load_state_dict(state_dict['llm_mapping'],strict=False)
 
     def freeze_modules(self): 
         all_modules = [self.moMA_generator.pipe.vae,self.moMA_generator.pipe.text_encoder,self.unet,self.model_llava,self.mapping]
@@ -126,3 +136,33 @@ class MoMA_main_modal(nn.Module):
     def reset(self):
         self.moMA_generator.reset_all()
 
+    def generate_images(self, rgb_path, mask_path, subject, prompt, strength=1.0, num=1, seed=0, return_mask=False):
+        batch = Dataset_evaluate_MoMA(rgb_path, prompt, subject, mask_path,self)
+        self.moMA_generator.set_selfAttn_strength(strength)
+        
+        num = 1 if return_mask else num
+        results = []
+        for sample_id in range(num):
+            with torch.cuda.amp.autocast(enabled=True, dtype=torch.bfloat16, cache_enabled=True):
+                with torch.no_grad(): 
+                    
+                    ### key steps
+                    llava_emb = self.forward_MLLM(batch).clone().detach()
+                    img,mask = self.moMA_generator.generate_with_MoMA(batch,llava_emb=llava_emb,seed=sample_id+seed,device=self.args.device)                            
+                    self.reset()
+                    ###
+                    
+                    if return_mask:
+                        return torch.cat([(batch['image'].cpu()+1)/2.0,img,mask],dim=0)
+                    else:
+                        results += [img[0]]
+        
+        to_pil = ToPILImage()
+        images = [to_pil(results[i]) for i in range(len(results))]
+        concatenated_image = Image.new('RGB', (images[0].width * num, images[0].height))
+        x_offset = 0
+        for img in images:
+            concatenated_image.paste(img, (x_offset, 0))
+            x_offset += img.width
+
+        return concatenated_image

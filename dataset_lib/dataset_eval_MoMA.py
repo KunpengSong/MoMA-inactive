@@ -5,7 +5,7 @@ from torchvision import transforms
 from llava.mm_utils import process_images, tokenizer_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 
 
-def Dataset_evaluate_MoMA(rgb_path, prompt,subject, mask_path,moMA_main_modal):
+def Dataset_evaluate_MoMA(rgb_path, prompt,subject, mask_path, moMA_main_modal):
 
     LLaVa_processor = moMA_main_modal.image_processor_llava
     llava_config = moMA_main_modal.model_llava.config

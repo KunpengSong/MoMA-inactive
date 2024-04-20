@@ -86,8 +86,11 @@ class MoMA_generator:
         self.device = device
         
         noise_scheduler = DDIMScheduler(num_train_timesteps=1000,beta_start=0.00085,beta_end=0.012,beta_schedule="scaled_linear",clip_sample=False,set_alpha_to_one=False,steps_offset=1,)
+        
+        print('Loading VAE: stabilityai--sd-vae-ft-mse...')
         vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse")
         
+        print('Loading StableDiffusion: Realistic_Vision...')
         self.pipe = StableDiffusionPipeline.from_pretrained(
             "SG161222/Realistic_Vision_V4.0_noVAE",
             torch_dtype=torch.bfloat16,
@@ -95,7 +98,6 @@ class MoMA_generator:
             vae=vae,
             feature_extractor=None,
             safety_checker=None,
-            # local_files_only=True
         ).to(self.device)
 
         self.unet = self.pipe.unet
@@ -220,16 +222,16 @@ class MoMA_generator:
             50,
             generator,
         )
-        return images, mask
+        images = torch.clip((images+1)/2.0,min=0.0,max=1.0)
+
+        return images.cpu(), mask.cpu()
     
-    def set_scale(self, processor_enable_mode, scale):
+    def set_selfAttn_strength(self, strength):
         for attn_processor in self.unet.attn_processors.values():
-            if processor_enable_mode == 'cross':
-                if isinstance(attn_processor, IPAttnProcessor):
-                    attn_processor.scale = scale
-            if processor_enable_mode == 'self':
-                if isinstance(attn_processor, IPAttnProcessor_Self):
-                    attn_processor.scale = scale
+            if isinstance(attn_processor, IPAttnProcessor):
+                attn_processor.scale = 1.0
+            if isinstance(attn_processor, IPAttnProcessor_Self):
+                attn_processor.scale = strength
 
     def set_cross_subject_idxs(self, subject_idxs):
         for attn_processor in self.unet.attn_processors.values():
