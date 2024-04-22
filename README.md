@@ -33,6 +33,17 @@ git clone https://github.com/KunpengSong/MoMA.git
 cd MoMA
 ```
 
+## Memory Requirements
+We support 8 bit and 4 bit inferences which reduce the memory consumptions: 
++ if you have 22 Gb or more GPU memory:
+```args.load_8bit, args.load_4bit = False, False```
+
++ if you have 18 Gb or more GPU memory:
+```args.load_8bit, args.load_4bit = True, False```
+
++ if you have 14 Gb or more GPU memory:
+```args.load_8bit, args.load_4bit = False, True```
+
 
 
 ## Download Models
