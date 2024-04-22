@@ -16,12 +16,14 @@ args.device = torch.device("cuda", 0)
 args.model_path = "KunpengSong/MoMA_llava_7b"
 
 #load MoMA from HuggingFace. Auto download
+args.load_8bit = True
+args.load_4bit = False
 moMA_main_modal = MoMA_main_modal(args).to(args.device, dtype=torch.bfloat16)
 
 
 # reference image and its mask
-rgb_path = "example_images/myImages/3.jpg"
-mask_path = "example_images/myImages/3_mask.jpg"
+rgb_path = "example_images/newImages/3.jpg"
+mask_path = "example_images/newImages/3_mask.jpg"
 subject = 'car'
 
 

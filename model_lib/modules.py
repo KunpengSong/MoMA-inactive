@@ -83,7 +83,7 @@ class MoMA_main_modal(nn.Module):
         
         print('Loading MoMA: its Multi-modal LLM...')
         model_name = get_model_name_from_path(args.model_path)
-        self.tokenizer_llava, self.model_llava, self.image_processor_llava, self.context_len_llava = load_pretrained_model(args.model_path, None, model_name, device=args.device)
+        self.tokenizer_llava, self.model_llava, self.image_processor_llava, self.context_len_llava = load_pretrained_model(args.model_path, None, model_name, load_8bit=self.args.load_8bit, load_4bit=self.args.load_4bit, device=args.device)
         
         add_function(self.model_llava)
 
