@@ -7,4 +7,4 @@
 
 **This page has been migrated to [ByteDance official](https://github.com/bytedance/MoMA/tree/main) GitHub repository.**
 
-**Please move to the new page...**
+**Please move to the [new page](https://github.com/bytedance/MoMA/tree/main)...**
