@@ -25,9 +25,9 @@ Please install from its [official repository](https://github.com/haotian-liu/LLa
 
 2. Download our MoMA repository
 
-3. Install required packages
-
 ```
+git clone https://github.com/KunpengSong/MoMA.git
+cd MoMA
 pip install -r requirements.txt
 ```
 
