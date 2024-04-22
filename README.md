@@ -1,6 +1,3 @@
-## Test page. This repository is 🔴Under Construction🔴.
-
-
 # ___***MoMA: Multimodal LLM Adapter for Fast Personalized Image Generation***___
 
 <a href='https://moma-adapter.github.io/'><img src='https://img.shields.io/badge/Project-Page-green'></a> 
@@ -51,20 +48,19 @@ MoMA:
 
 ## How to Use
 
-### SD_1.5
+### SD_1.5 (Realistic_Vision_V4.0)
 
 - If you prefer Jupyter-notebook: [**run_MoMA_notebook.ipynb**](run_MoMA_notebook.ipynb)
 - If you prefer Python code: [**run_evaluate_MoMA.py**](run_evaluate_MoMA.py)
 
-Example Images: 
-new context:
+New context:
 ![change context](assets/context.png)
-new texture:
+New texture:
 ![change texture](assets/texture.png)
 
 
-**Hyper parameters**
-- In "changing context", you can increase the `strength` to get more accurate details. Mostly,`strength=1.0` is the best. It's recommended that `strength` is no grater than `1.2`.
+**Hyper parameter:**
+- In "changing context", you can increase the `strength` to get more accurate details. Mostly,`strength=1.0` is the best. It's recommended that `strength` is no greater than `1.2`.
 - In "changing texture", you can decrease the `strength` to balance between detail accuracy and prompt fidelity. To get better prompt fidelity, you can decrease `strength`. Mostly,`strength=0.4` is the best. It's recommended that `strength` is no grater than `0.6`.
 
 
