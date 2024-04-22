@@ -15,9 +15,20 @@ args = parse_args()
 args.device = torch.device("cuda", 0)
 args.model_path = "KunpengSong/MoMA_llava_7b"
 
+
+
+# if you have 22 Gb GPU memory:
+args.load_8bit, args.load_4bit = False, False
+
+# if you have 18 Gb GPU memory:
+# args.load_8bit, args.load_4bit = True, False
+
+# if you have 14 Gb GPU memory:
+# args.load_8bit, args.load_4bit = False, True
+
+
+
 #load MoMA from HuggingFace. Auto download
-args.load_8bit = True
-args.load_4bit = False
 moMA_main_modal = MoMA_main_modal(args).to(args.device, dtype=torch.bfloat16)
 
 
@@ -25,7 +36,6 @@ moMA_main_modal = MoMA_main_modal(args).to(args.device, dtype=torch.bfloat16)
 rgb_path = "example_images/newImages/3.jpg"
 mask_path = "example_images/newImages/3_mask.jpg"
 subject = 'car'
-
 
 
 # Let's generate new images!
@@ -37,7 +47,7 @@ save_image(generated_image,f"{args.output_path}/{subject}_{prompt}.jpg")
 
 ################ change texture ##################
 prompt = "A wooden sculpture of a car on the table."
-generated_image = moMA_main_modal.generate_images(rgb_path, mask_path, subject, prompt, strength=0.4, seed=3, return_mask=True)  # set strength to 0.4 for better prompt fidelity
+generated_image = moMA_main_modal.generate_images(rgb_path, mask_path, subject, prompt, strength=0.4, seed=4, return_mask=True)  # set strength to 0.4 for better prompt fidelity
 save_image(generated_image,f"{args.output_path}/{subject}_{prompt}.jpg")
 
 
