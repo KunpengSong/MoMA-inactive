@@ -23,22 +23,17 @@ we present MoMA: an open-vocabulary, training-free personalized image model that
 
 
 ## Installation
-
+1. Install latest diffusers
 ```
-# install latest diffusers
 pip install diffusers
+```
+2. Install LlaVA: 
+Please install from its [official repository](https://github.com/haotian-liu/LLaVA#install)
 
-#install LlaVA 
-install from its [official repository](https://github.com/haotian-liu/LLaVA)
-
-# download the models
+3. Download our MoMA repository
+```
 git clone https://github.com/KunpengSong/MoMA.git
 cd MoMA
-
-# then you can use the model by: 
-+ the notebook: run_MoMA_notebook.ipynb
-+ the Python code: run_evaluate_MoMA.py
-
 ```
 
 
@@ -58,17 +53,17 @@ MoMA:
 
 ### SD_1.5
 
-- If you prefer Jupyter-notebook: [**run_MoMA_notebook**](run_MoMA_notebook.ipynb)
-- If you prefer Python code: [**run_evaluate_MoMA**](run_evaluate_MoMA.py)
+- If you prefer Jupyter-notebook: [**run_MoMA_notebook.ipynb**](run_MoMA_notebook.ipynb)
+- If you prefer Python code: [**run_evaluate_MoMA.py**](run_evaluate_MoMA.py)
 
 Example Images: 
-new context
+new context:
 ![change context](assets/context.png)
-new texture
+new texture:
 ![change texture](assets/texture.png)
 
 
-**Best Practice**
+**Hyper parameters**
 - In "changing context", you can increase the `strength` to get more accurate details. Mostly,`strength=1.0` is the best. It's recommended that `strength` is no grater than `1.2`.
 - In "changing texture", you can decrease the `strength` to balance between detail accuracy and prompt fidelity. To get better prompt fidelity, you can decrease `strength`. Mostly,`strength=0.4` is the best. It's recommended that `strength` is no grater than `0.6`.
 
