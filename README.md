@@ -42,8 +42,8 @@ cd MoMA
 VAE: stabilityai--sd-vae-ft-mse
 StableDiffusion: Realistic_Vision_V4.0_noVAE
 MoMA: 
-    Multi-modal LLM: MoMA_llava_7b
-    Attentions and mappings: attn_adapters_projectors.th
+    Multi-modal LLM: MoMA_llava_7b (13 GB)
+    Attentions and mappings: attn_adapters_projectors.th (151 Mb)
 ```
 
 ## How to Use
