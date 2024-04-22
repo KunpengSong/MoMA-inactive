@@ -1,5 +1,0 @@
-diffusers==0.26.3
-pytorch_lightning
-huggingface-hub
-lightning-utilities
-protobuf
