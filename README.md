@@ -20,17 +20,15 @@ we present MoMA: an open-vocabulary, training-free personalized image model that
 
 
 ## Installation
-1. Install latest diffusers
-```
-pip install diffusers
-```
-2. Install LlaVA: 
+1. Install LlaVA: 
 Please install from its [official repository](https://github.com/haotian-liu/LLaVA#install)
 
-3. Download our MoMA repository
+2. Download our MoMA repository
+
 ```
 git clone https://github.com/KunpengSong/MoMA.git
 cd MoMA
+pip install -r requirements.txt
 ```
 
 ## Memory Requirements
