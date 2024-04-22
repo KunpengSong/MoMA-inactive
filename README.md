@@ -28,8 +28,6 @@ Please install from its [official repository](https://github.com/haotian-liu/LLa
 3. Install required packages
 
 ```
-git clone https://github.com/KunpengSong/MoMA.git
-cd MoMA
 pip install -r requirements.txt
 ```
 
